@@ -1,12 +1,10 @@
 __author__ = 'Douglas'
 
 import scipy.io as scio
-import os
 import cv2
 import numpy as np
 np.set_printoptions(formatter={'float_kind': lambda x: "%.4f" % x})
 
-this_path = os.path.dirname(__file__)
 
 class ThreeD_Model:
     def __init__(self, path, name):

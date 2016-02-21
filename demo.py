@@ -8,7 +8,8 @@ import os
 import check_resources as check
 import matplotlib.pyplot as plt
 
-this_path = os.path.dirname(__file__)
+
+this_path = os.path.dirname(os.path.abspath(__file__))
 
 
 def demo():
@@ -44,7 +45,6 @@ def demo():
     plt.title('Frontalized with soft symmetry')
     plt.imshow(frontal_sym[:, :, ::-1])
     plt.show()
-    #cv2.imwrite('out.jpg', frontal_raw)
 
 
 if __name__ == "__main__":
