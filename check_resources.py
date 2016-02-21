@@ -37,7 +37,7 @@ def extract_bz2(fpath):
 
 
 def check_dlib_landmark_weights():
-    dlib_models_folder = "../dlib_models"
+    dlib_models_folder = "dlib_models"
     if(not os.path.isdir(dlib_models_folder)):
         os.mkdir(dlib_models_folder)
     if(not os.path.isfile(dlib_models_folder+"/shape_predictor_68_face_landmarks.dat")):
