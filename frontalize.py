@@ -91,6 +91,12 @@ def frontalize(img, proj_matrix, ref_U, eyemask):
 
         # exclude eyes from symmetry
         frontal_sym = np.multiply(frontal_sym, 1-eyemask) + np.multiply(frontal_raw, eyemask)
+        frontal_raw[frontal_raw > 255] = 255
+        frontal_raw[frontal_raw < 0] = 0
+        frontal_raw = frontal_raw.astype('uint8')
+        frontal_sym[frontal_sym > 255] = 255
+        frontal_sym[frontal_sym < 0] = 0
+        frontal_sym = frontal_sym.astype('uint8')
     else: # both sides are occluded pretty much to the same extent -- do not use symmetry
         frontal_sym = frontal_raw
     return frontal_raw, frontal_sym
