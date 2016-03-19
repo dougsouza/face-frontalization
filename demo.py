@@ -36,8 +36,6 @@ def demo():
     eyemask = np.asarray(io.loadmat('frontalization_models/eyemask.mat')['eyemask'])
     # perform frontalization
     frontal_raw, frontal_sym = frontalize.frontalize(img, proj_matrix, model3D.ref_U, eyemask)
-    frontal_raw = frontal_raw.astype('uint8')
-    frontal_sym = frontal_sym.astype('uint8')
     plt.figure()
     plt.title('Frontalized no symmetry')
     plt.imshow(frontal_raw[:, :, ::-1])
