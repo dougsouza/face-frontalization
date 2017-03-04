@@ -8,12 +8,12 @@ The original code was written in Matlab and was ported to Python using Numpy and
 ### Dependencies
 [Dlib Python Wraper](http://dlib.net) >= 18.17
 
-[OpenCV Python Wraper](http://opencv.org/downloads.html) >= 3.0.0
+[OpenCV Python Wraper](http://opencv.org/downloads.html) = 3.0.0
 
 [SciPy](http://www.scipy.org/install.html)
 
 
-- Windows x64: I have provided compiled binaries for OpenCV 3.0.0 and Dib 18.18 [here](https://drive.google.com/file/d/0B7pvh2tbCWLLdElLYURTODdZSzg/view?usp=sharing). Just drag the files to your python packages folder (e.g. site-packages). If they don't work, you'll have to compile them yourself.
+- Windows x64: I have provided compiled binaries for OpenCV 3.0.0 and Dlib 18.18 [here](https://drive.google.com/file/d/0B7pvh2tbCWLLdElLYURTODdZSzg/view?usp=sharing). Just drag the files to your python packages folder (e.g. site-packages). If they don't work, you'll have to compile them yourself.
 - Linux/OSX: You'll have to compile OpenCV and Dlib yourself.
 
 ### Other Dependencies
