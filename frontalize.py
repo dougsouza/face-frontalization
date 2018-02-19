@@ -18,8 +18,6 @@ class ThreeD_Model:
         self.indbad = model['indbad'][0, 0]#0x1
         self.ref_U = np.asarray(model['refU'][0,0])
 
-
-
 def frontalize(img, proj_matrix, ref_U, eyemask):
     ACC_CONST = 800
     img = img.astype('float32')
@@ -36,15 +34,16 @@ def frontalize(img, proj_matrix, ref_U, eyemask):
     bad = np.logical_or(bad, bgind.reshape((-1), order='F'))
     bad = np.asarray(bad).reshape((-1), order='F')
 
-    nonbadind = np.nonzero(bad == 0)[0]
-    temp_proj2 = temp_proj2[:, nonbadind]
-    # because python arrays are zero indexed
     temp_proj2 -= 1
-    ind = np.ravel_multi_index((np.asarray(temp_proj2[1, :].round(), dtype='int64'), np.asarray(temp_proj2[0, :].round(),
-                                dtype='int64')), dims=img.shape[:-1], order='F')
+
+    badind = np.nonzero(bad > 0)[0]
+    temp_proj2[:,badind] = 0
+
+    ind = np.ravel_multi_index((np.asarray(temp_proj2[1, :].round(), dtype='int64'), np.asarray(temp_proj2[0, :].round(), dtype='int64')), dims=img.shape[:-1], order='F')
+
     synth_frontal_acc = np.zeros(ref_U.shape[:-1])
     ind_frontal = np.arange(0, ref_U.shape[0]*ref_U.shape[1])
-    ind_frontal = ind_frontal[nonbadind]
+
     c, ic = np.unique(ind, return_inverse=True)
     bin_edges = np.r_[-np.Inf, 0.5 * (c[:-1] + c[1:]), np.Inf]
     count, bin_edges = np.histogram(ind, bin_edges)
@@ -53,9 +52,19 @@ def frontalize(img, proj_matrix, ref_U, eyemask):
     synth_frontal_acc = synth_frontal_acc.reshape((320, 320), order='F')
     synth_frontal_acc[bgind] = 0
     synth_frontal_acc = cv2.GaussianBlur(synth_frontal_acc, (15, 15), 30., borderType=cv2.BORDER_REPLICATE)
-    frontal_raw = np.zeros((102400, 3))
-    frontal_raw[ind_frontal, :] = cv2.remap(img, temp_proj2[0, :].astype('float32'), temp_proj2[1, :].astype('float32'), cv2.INTER_CUBIC)
-    frontal_raw = frontal_raw.reshape((320, 320, 3), order='F')
+
+    #remap
+    mapX = temp_proj2[0,:].astype(np.float32)
+    mapY = temp_proj2[1,:].astype(np.float32)
+
+    mapX = np.reshape(mapX,(-1,320), order = 'F')
+    mapY = np.reshape(mapY,(-1,320), order = 'F')
+
+    frontal_raw = cv2.remap(img, mapX, mapY, cv2.INTER_CUBIC)
+
+    frontal_raw = frontal_raw.reshape((-1,3), order = 'F')
+    frontal_raw[badind,:] = 0
+    frontal_raw = frontal_raw.reshape((320, 320, 3), order = 'F')
 
     # which side has more occlusions?
     midcolumn = np.round(ref_U.shape[1]/2)
@@ -100,3 +109,4 @@ def frontalize(img, proj_matrix, ref_U, eyemask):
     else: # both sides are occluded pretty much to the same extent -- do not use symmetry
         frontal_sym = frontal_raw
     return frontal_raw, frontal_sym
+
